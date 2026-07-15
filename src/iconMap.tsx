@@ -1,4 +1,4 @@
-import cart from './assets/shopping-cart.svg'
+import { type IconMap } from './types'
 import {
    Apple,
    Box,
@@ -8,18 +8,15 @@ import {
    ShoppingBag,
    ShoppingCart,
    Wheat,
-   type LucideProps,
 } from 'lucide-react'
-import type { ComponentType } from 'react'
 
-export const iconMap: Record<string, string | ComponentType<LucideProps>> = {
-   cart,
+export const iconMap: IconMap = {
    shoppingCart: ShoppingCart,
-   Dairy: Package,
-   Bakery: Cookie,
-   Produce: Apple,
-   Grains: Wheat,
-   Cooking: Box,
-   Snacks: ShoppingBag,
-   Meat: Drumstick,
+   dairy: Package,
+   bakery: Cookie,
+   produce: Apple,
+   grains: Wheat,
+   cooking: Box,
+   snacks: ShoppingBag,
+   meat: Drumstick,
 }
