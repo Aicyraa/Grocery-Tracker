@@ -1,0 +1,9 @@
+.grocery-entries {
+   display: flex;
+   flex-direction: column;
+   gap: 2rem;
+}
+
+.grocery-entry{
+   display: flex;
+}

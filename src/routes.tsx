@@ -1,19 +1,19 @@
-import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
+import { createBrowserRouter } from 'react-router-dom'
+import App from './App'
+import GroceryTab from './components/groceries/GroceryTab'
+import GroceryItems from './components/groceries/GroceryItems'
 
 const routes = createBrowserRouter([
    {
       path: '/',
       element: <App />,
-      errorElement: <h1> None </h1>
+      errorElement: <h1> None </h1>,
    },
    {
       path: 'grocery',
-      element: <h1> Grocery </h1>,
-      children: [
-         {path: ':groceryID', element: <p> Test Grocery</p>}
-      ]
-   }
+      element: <GroceryTab />,
+      children: [{ path: ':groceryID', element: <GroceryItems /> }],
+   },
 ])
 
 export default routes
