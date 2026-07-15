@@ -1,22 +1,22 @@
 import { type IconMap } from './types'
 import {
    Apple,
-   Box,
+   Beef,
+   Carrot,
    Cookie,
-   Drumstick,
-   Package,
-   ShoppingBag,
+   Milk,
    ShoppingCart,
    Wheat,
+   Package,
 } from 'lucide-react'
 
 export const iconMap: IconMap = {
-   shoppingCart: ShoppingCart,
-   dairy: Package,
-   bakery: Cookie,
-   produce: Apple,
-   grains: Wheat,
-   cooking: Box,
-   snacks: ShoppingBag,
-   meat: Drumstick,
+   shoppingCart: ShoppingCart, 
+   fruits: Apple,
+   vegetables: Carrot,
+   meat: Beef,
+   dairy: Milk,
+   bakery: Wheat,
+   snacks: Cookie,
+   other: Package, 
 }

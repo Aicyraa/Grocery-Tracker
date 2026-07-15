@@ -1,38 +1,49 @@
 import './css/App.css'
-import type { GroceryEntries } from './types'
-
 import { useEffect, useState } from 'react'
+import { type GroceryEntries } from './types'
+
 import GroceryView from './components/groceries/GroceryView'
+import FormGrocery from './components/forms/FormGrocery'
 import { PhilippinePeso } from 'lucide-react'
+import { calculateExpenses } from './utils/calculate.util'
+import { loadSavedEntries } from './utils/storage'
+import { type SaveDataInput, saveData } from './utils/data.util'
 
 function App() {
-   const [groceryEntries, setGroceryEntries] = useState<
-      GroceryEntries[] | null
-   >(null)
-
-   // Category, Edit Item, Computation
+   const [entries, setEntries] = useState<GroceryEntries[] | null>(null)
+   const [toggleForm, setToggleForm] = useState<boolean>(false)
 
    useEffect(() => {
-      fetch('/Grocery-Entries.json')
-         .then(response => response.json())
-         .then(response => setGroceryEntries(response))
+      const savedEntries = loadSavedEntries()
+      if (savedEntries.length) {
+         setEntries(savedEntries)
+         return
+      }
    }, [])
 
-   const totalGroceryExpenses = groceryEntries
-      ?.map(entry => entry.expenses)
-      .reduce((prevVal, currVal) => prevVal + currVal)
+   const handleAddEntry = (newEntry: SaveDataInput) => {
+      if (!entries) return
+      const updatedEntries = saveData(entries, newEntry)
+      setEntries(updatedEntries)
+   }
 
    return (
       <div className="app">
+         {toggleForm && <FormGrocery onAdd={handleAddEntry} />}
          <div className="grocery-informations">
-            <span> Total Grocery Expenses </span>
-            <span> <PhilippinePeso /> {totalGroceryExpenses} </span>
+            <span> Total Expenses </span>
+            <span>
+               <PhilippinePeso /> {calculateExpenses(entries ?? [])}
+            </span>
          </div>
          <div className="grocery-entries">
-            {groceryEntries?.map(entry => (
+            {entries?.map(entry => (
                <GroceryView entry={entry} key={entry.id} />
             ))}
          </div>
+         <button type="button" onClick={() => setToggleForm(prev => !prev)}>
+            Add Grocery Entry
+         </button>
       </div>
    )
 }

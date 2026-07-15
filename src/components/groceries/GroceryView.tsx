@@ -14,7 +14,7 @@ function GroceryView({ entry }: { entry: GroceryEntries }) {
       >
          <CartIcon />
          <div className="grocery-details">
-            <h3> {entry.name} </h3>
+            <h3> {entry.label} </h3>
             <div className="grocery-budget-info">
                <span> {entry.budget} </span>
                <span> {entry.expenses} </span>

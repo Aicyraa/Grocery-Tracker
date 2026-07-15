@@ -11,7 +11,7 @@ function GroceryNav({
    return (
       <div className="grocery-navigation">
          <button onClick={() => navigate('/')}> BacK </button>
-         <h3> {entryPartial.name} </h3>
+         <h3> {entryPartial.label} </h3>
          <h3> {entryPartial.items?.length} </h3>
          <div className="group">
             <span> Budget </span>

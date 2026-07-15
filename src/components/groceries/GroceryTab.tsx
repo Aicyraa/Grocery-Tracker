@@ -22,7 +22,7 @@ function GroceryTab() {
       <div className="grocery-tab">
          <GroceryNav
             entryPartial={{
-               name: currentEntry.name,
+               label: currentEntry.label,
                budget: currentEntry.budget,
                expenses: currentEntry.expenses,
                items: currentEntry.items,
