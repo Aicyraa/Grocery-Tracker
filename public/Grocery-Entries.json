@@ -3,21 +3,24 @@
       "id": 1,
       "name": "Weekly Groceries",
       "budget": 150,
-      "date": "7-8-26",
+      "date": "2026-04-19",
       "expenses": 120,
       "remaining_balance": 30,
       "items": [
          {
+            "id": 1,
             "name": "Milk",
             "category": "Dairy",
             "price": 4.5
          },
          {
+            "id": 2,
             "name": "Bread",
             "category": "Bakery",
             "price": 3.25
          },
          {
+            "id": 3,
             "name": "Eggs",
             "category": "Dairy",
             "price": 3.75
@@ -28,21 +31,24 @@
       "id": 2,
       "name": "Produce Run",
       "budget": 80,
-      "date": "7-10-26",
+      "date": "2026-07-10",
       "expenses": 55,
       "remaining_balance": 25,
       "items": [
          {
+            "id": 1,
             "name": "Apples",
             "category": "Produce",
             "price": 8.0
          },
          {
+            "id": 2,
             "name": "Spinach",
             "category": "Produce",
             "price": 4.5
          },
          {
+            "id": 3,
             "name": "Bananas",
             "category": "Produce",
             "price": 3.25
@@ -53,21 +59,24 @@
       "id": 3,
       "name": "Pantry Restock",
       "budget": 120,
-      "date": "7-12-26",
+      "date": "2026-07-12",
       "expenses": 98,
       "remaining_balance": 22,
       "items": [
          {
+            "id": 1,
             "name": "Rice",
             "category": "Grains",
             "price": 12.0
          },
          {
+            "id": 2,
             "name": "Pasta",
             "category": "Grains",
             "price": 7.5
          },
          {
+            "id": 3,
             "name": "Olive Oil",
             "category": "Cooking",
             "price": 18.0
@@ -78,21 +87,24 @@
       "id": 4,
       "name": "Snack Supply",
       "budget": 60,
-      "date": "7-14-26",
+      "date": "2026-07-14",
       "expenses": 42,
       "remaining_balance": 18,
       "items": [
          {
+            "id": 1,
             "name": "Chips",
             "category": "Snacks",
             "price": 5.0
          },
          {
+            "id": 2,
             "name": "Chocolate",
             "category": "Snacks",
             "price": 6.5
          },
          {
+            "id": 3,
             "name": "Trail Mix",
             "category": "Snacks",
             "price": 8.0
@@ -103,21 +115,24 @@
       "id": 5,
       "name": "Meal Prep",
       "budget": 100,
-      "date": "7-16-26",
+      "date": "2026-07-16",
       "expenses": 84,
       "remaining_balance": 16,
       "items": [
          {
+            "id": 1,
             "name": "Chicken Breast",
             "category": "Meat",
             "price": 15.0
          },
          {
+            "id": 2,
             "name": "Broccoli",
             "category": "Produce",
             "price": 4.5
          },
          {
+            "id": 3,
             "name": "Quinoa",
             "category": "Grains",
             "price": 5.5
@@ -125,3 +140,4 @@
       ]
    }
 ]
+
