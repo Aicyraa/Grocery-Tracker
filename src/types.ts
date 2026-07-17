@@ -1,17 +1,17 @@
-import { type LucideProps } from 'lucide-react'
-import React from 'react'
-
-interface Items {
+export interface Items {
    id: number
-   isChecked: boolean
    name: string
    price: number
-   category: string
+   quantity: number
+   category: string // matches a Category.name
+   isChecked: boolean
 }
 
-// Main Types
-
-export type IconMap = Record<string, React.ElementType<LucideProps>>
+export interface Category {
+   id: number
+   name: string
+   iconKey: string // key into ICON_LIBRARY (see iconMap.tsx)
+}
 
 export interface GroceryEntries {
    id: number
