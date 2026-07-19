@@ -107,7 +107,7 @@ function ExpensesChart() {
                         <XAxis dataKey="label" tick={{ fontSize: 12, fill: '#6b7280' }} />
                         <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} />
                         <Tooltip
-                           formatter={(value: number) => [`₱${value}`, 'Expenses']}
+                           formatter={(value) => [`₱${value ?? 0}`, 'Expenses']}
                            contentStyle={{
                               borderRadius: 8,
                               border: '1px solid #dcfce7',
