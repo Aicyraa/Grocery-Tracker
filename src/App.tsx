@@ -4,14 +4,15 @@ import { type GroceryEntries } from './types'
 import GroceryView from './components/groceries/GroceryView'
 import FormGrocery from './components/forms/FormGrocery'
 import AnimatedModal from './components/ui/AnimatedModal'
-import { PhilippinePeso, Plus } from 'lucide-react'
-import { calculateExpenses } from './utils/calculate.util'
+import TopNav from './components/ui/TopNav'
+import { Plus } from 'lucide-react'
 import { loadSavedEntries } from './utils/storage'
-import { type SaveDataInput, saveData, deleteEntry } from './utils/data.util'
+import { type SaveDataInput, saveData, deleteEntry, updateEntry } from './utils/data.util'
 
 function App() {
    const [entries, setEntries] = useState<GroceryEntries[] | null>(null)
    const [showEntryForm, setShowEntryForm] = useState<boolean>(false)
+   const [editingEntry, setEditingEntry] = useState<GroceryEntries | null>(null)
 
    useEffect(() => {
       const savedEntries = loadSavedEntries()
@@ -24,32 +25,31 @@ function App() {
       setShowEntryForm(false)
    }
 
+   const handleUpdateEntry = (updates: SaveDataInput) => {
+      if (!entries || !editingEntry) return
+      const updatedEntries = updateEntry(entries, editingEntry.id, updates)
+      setEntries(updatedEntries)
+      setEditingEntry(null)
+   }
+
    const handleDeleteEntry = (entryId: number) => {
       if (!entries) return
       setEntries(deleteEntry(entries, entryId))
    }
 
-   const isOverBudget = entries
-      ? calculateExpenses(entries) > entries.reduce((sum, e) => sum + e.budget, 0)
-      : false
-
    return (
       <div className="min-h-screen bg-gradient-to-b from-white to-green-50 pb-28">
-         <div className="mx-auto max-w-2xl px-4 py-6">
-            <div className="mb-6 flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm">
-               <span className="text-sm font-medium text-neutral-500">Total Expenses</span>
-               <span
-                  className={`flex items-center gap-1 text-xl font-semibold ${
-                     isOverBudget ? 'text-red-600' : 'text-neutral-900'
-                  }`}
-               >
-                  <PhilippinePeso size={18} /> {calculateExpenses(entries ?? [])}
-               </span>
-            </div>
+         <TopNav />
 
+         <div className="mx-auto max-w-2xl px-4 py-6">
             <div className="flex flex-col gap-3">
                {entries?.map(entry => (
-                  <GroceryView entry={entry} key={entry.id} onDelete={handleDeleteEntry} />
+                  <GroceryView
+                     entry={entry}
+                     key={entry.id}
+                     onDelete={handleDeleteEntry}
+                     onEdit={() => setEditingEntry(entry)}
+                  />
                ))}
             </div>
          </div>
@@ -67,6 +67,20 @@ function App() {
 
          <AnimatedModal isOpen={showEntryForm} onClose={() => setShowEntryForm(false)}>
             <FormGrocery onAdd={handleAddEntry} />
+         </AnimatedModal>
+
+         <AnimatedModal isOpen={editingEntry !== null} onClose={() => setEditingEntry(null)}>
+            {editingEntry && (
+               <FormGrocery
+                  onAdd={handleUpdateEntry}
+                  initialValues={{
+                     label: editingEntry.label,
+                     budget: editingEntry.budget,
+                     date: editingEntry.date,
+                  }}
+                  submitLabel="Save Changes"
+               />
+            )}
          </AnimatedModal>
       </div>
    )

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { Trash2 } from 'lucide-react'
 import { ICON_GROUPS, ICON_LIBRARY } from '../../iconMap'
 import { type Category } from '../../types'
 import { type NewCategoryInput } from '../../utils/categories.util'
@@ -7,12 +8,13 @@ import { type NewCategoryInput } from '../../utils/categories.util'
 interface FormCategoryProps {
    existingCategories: Category[]
    onAdd: (data: NewCategoryInput) => void
+   onDeleteCategory: (category: Category) => void
    onCancel: () => void
 }
 
 type FormInp = { name: string }
 
-function FormCategory({ existingCategories, onAdd, onCancel }: FormCategoryProps) {
+function FormCategory({ existingCategories, onAdd, onDeleteCategory, onCancel }: FormCategoryProps) {
    const [selectedIconKey, setSelectedIconKey] = useState<string | null>(null)
    const [iconError, setIconError] = useState<string | null>(null)
 
@@ -35,6 +37,39 @@ function FormCategory({ existingCategories, onAdd, onCancel }: FormCategoryProps
          className="flex flex-col gap-4 rounded-2xl bg-white p-5 shadow-xl"
          onSubmit={handleSubmit(formHandler)}
       >
+         {existingCategories.length > 0 && (
+            <div className="flex flex-col gap-1">
+               <span className="text-sm font-medium text-neutral-700">Your categories</span>
+               <div className="max-h-32 overflow-y-auto rounded-lg border border-neutral-200">
+                  {existingCategories.map(category => {
+                     const Icon = ICON_LIBRARY[category.iconKey] ?? ICON_LIBRARY.package
+                     const isProtected = category.name.toLowerCase() === 'other'
+                     return (
+                        <div
+                           key={category.id}
+                           className="flex items-center justify-between border-b border-neutral-100 px-3 py-2 last:border-b-0"
+                        >
+                           <span className="flex items-center gap-2 text-sm text-neutral-700">
+                              <Icon size={15} className="text-green-700" />
+                              {category.name}
+                           </span>
+                           {!isProtected && (
+                              <button
+                                 type="button"
+                                 onClick={() => onDeleteCategory(category)}
+                                 aria-label={`Delete ${category.name}`}
+                                 className="rounded-md p-1 text-neutral-300 hover:bg-red-50 hover:text-red-600"
+                              >
+                                 <Trash2 size={14} />
+                              </button>
+                           )}
+                        </div>
+                     )
+                  })}
+               </div>
+            </div>
+         )}
+
          <div className="flex flex-col gap-1">
             <label htmlFor="categoryName" className="text-sm font-medium text-neutral-700">
                Category name

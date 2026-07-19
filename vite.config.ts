@@ -11,9 +11,9 @@ export default defineConfig({
          registerType: 'autoUpdate',
          manifest: {
             name: 'Grocery Budget Tracker',
-            short_name: 'Grocery',
+            short_name: 'Grocery Tracker',
             description: 'Track grocery spending against your budget.',
-            theme_color: '#15803d',   // green-700, matches your app theme
+            theme_color: '#15803d',   // gr4een-700, matches your app theme
             background_color: '#ffffff',
             display: 'standalone',
             start_url: '/',
@@ -25,4 +25,9 @@ export default defineConfig({
          },
       }),
    ],
+   optimizeDeps: {
+      // transformers.js ships its own WASM/WebGPU worker files; pre-bundling
+      // it with esbuild causes issues, so it's excluded from dep optimization.
+      exclude: ['@huggingface/transformers'],
+   },
 })

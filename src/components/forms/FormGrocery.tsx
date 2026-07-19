@@ -5,15 +5,17 @@ type FormInp = Pick<GroceryEntries, 'label' | 'budget' | 'date'>
 
 interface FormGroceryProps {
    onAdd: (data: FormInp) => void
+   initialValues?: FormInp
+   submitLabel?: string
 }
 
-function FormGrocery({ onAdd }: FormGroceryProps) {
+function FormGrocery({ onAdd, initialValues, submitLabel = 'Add' }: FormGroceryProps) {
    const {
       register,
       handleSubmit,
       reset,
       formState: { errors },
-   } = useForm<FormInp>()
+   } = useForm<FormInp>({ defaultValues: initialValues })
 
    const formHandler: SubmitHandler<FormInp> = data => {
       onAdd(data)
@@ -81,7 +83,7 @@ function FormGrocery({ onAdd }: FormGroceryProps) {
             type="submit"
             className="w-full rounded-lg bg-green-700 px-4 py-2 text-sm font-medium text-white hover:bg-green-800"
          >
-            Add
+            {submitLabel}
          </button>
       </form>
    )

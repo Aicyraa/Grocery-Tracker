@@ -35,6 +35,40 @@ export function saveData(
    return updatedEntries
 }
 
+export interface EntryEditInput {
+   label: string
+   budget: number
+   date: string | Date
+}
+
+function formatDate(date: string | Date): string {
+   return typeof date === 'string' ? date : date.toISOString().split('T')[0]
+}
+
+// Recomputes remaining_balance since an edit can change the budget.
+export function applyEntryEdits(entry: GroceryEntries, updates: EntryEditInput): GroceryEntries {
+   const budget = updates.budget
+   return {
+      ...entry,
+      label: updates.label,
+      budget,
+      date: formatDate(updates.date),
+      remaining_balance: budget - entry.expenses,
+   }
+}
+
+export function updateEntry(
+   entries: GroceryEntries[],
+   entryId: number,
+   updates: EntryEditInput,
+): GroceryEntries[] {
+   const updatedEntries = entries.map(entry =>
+      entry.id === entryId ? applyEntryEdits(entry, updates) : entry,
+   )
+   persistEntries(updatedEntries)
+   return updatedEntries
+}
+
 export function deleteEntry(
    entries: GroceryEntries[],
    entryId: number,
@@ -106,6 +140,23 @@ export function updateItem(
 export function deleteItem(entry: GroceryEntries, itemId: number): GroceryEntries {
    const updatedItems = entry.items.filter(item => item.id !== itemId)
    return recalculateEntry(entry, updatedItems)
+}
+
+// After a category is deleted, moves any items that used it to a fallback
+// category (e.g. "Other") across every entry, not just the one currently open.
+export function reassignItemsCategory(
+   entries: GroceryEntries[],
+   fromCategory: string,
+   toCategory: string,
+): GroceryEntries[] {
+   const updatedEntries = entries.map(entry => ({
+      ...entry,
+      items: entry.items.map(item =>
+         item.category === fromCategory ? { ...item, category: toCategory } : item,
+      ),
+   }))
+   persistEntries(updatedEntries)
+   return updatedEntries
 }
 
 // After GroceryTab edits a single entry's items, this syncs that edit back

@@ -3,15 +3,16 @@ import type { GroceryEntries } from '../../types'
 
 import { NavLink } from 'react-router-dom'
 import { iconMap } from '../../iconMap'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Pencil } from 'lucide-react'
 import Modal from '../ui/Modal'
 
 interface GroceryViewProps {
    entry: GroceryEntries
    onDelete: (entryId: number) => void
+   onEdit: () => void
 }
 
-function GroceryView({ entry, onDelete }: GroceryViewProps) {
+function GroceryView({ entry, onDelete, onEdit }: GroceryViewProps) {
    const [confirmingDelete, setConfirmingDelete] = useState(false)
    const CartIcon = iconMap.shoppingCart
 
@@ -36,6 +37,15 @@ function GroceryView({ entry, onDelete }: GroceryViewProps) {
                   <h5 className="mt-1 text-xs text-neutral-400">{entry.date}</h5>
                </div>
             </NavLink>
+
+            <button
+               type="button"
+               aria-label="Edit entry"
+               onClick={onEdit}
+               className="absolute right-11 top-3 rounded-lg p-1.5 text-neutral-300 opacity-0 transition hover:bg-green-50 hover:text-green-700 group-hover:opacity-100"
+            >
+               <Pencil size={16} />
+            </button>
 
             <button
                type="button"

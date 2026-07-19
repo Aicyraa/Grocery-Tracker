@@ -65,6 +65,22 @@ export function addCategory(
    return updatedCategories
 }
 
+export class ProtectedCategoryError extends Error {}
+
+// "Other" is protected since it's the fallback target items get reassigned
+// to when their own category is deleted — deleting it too would leave
+// reassignment with nowhere to go.
+export function deleteCategory(categories: Category[], categoryId: number): Category[] {
+   const target = categories.find(category => category.id === categoryId)
+   if (target && target.name.toLowerCase() === 'other') {
+      throw new ProtectedCategoryError('"Other" can\'t be deleted — it\'s the fallback category.')
+   }
+
+   const updatedCategories = categories.filter(category => category.id !== categoryId)
+   persistCategories(updatedCategories)
+   return updatedCategories
+}
+
 export function findCategory(
    categories: Category[],
    categoryName: string,

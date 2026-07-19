@@ -6,13 +6,23 @@ import { PhilippinePeso, Plus, FolderPlus } from 'lucide-react'
 import GroceryNav from './GroceryNav'
 import FormItem from '../forms/FormItem'
 import FormCategory from '../forms/FormCategory'
+import FormGrocery from '../forms/FormGrocery'
 import AnimatedModal from '../ui/AnimatedModal'
-import { addItem, updateEntryInList } from '../../utils/data.util'
+import Modal from '../ui/Modal'
+import {
+   addItem,
+   updateEntryInList,
+   applyEntryEdits,
+   reassignItemsCategory,
+   type SaveDataInput,
+} from '../../utils/data.util'
 import { loadSavedEntries } from '../../utils/storage'
 import {
    loadCategories,
    addCategory,
+   deleteCategory,
    DuplicateCategoryError,
+   ProtectedCategoryError,
    type NewCategoryInput,
 } from '../../utils/categories.util'
 
@@ -23,6 +33,8 @@ export interface GroceryContext {
    categories: Category[]
 }
 
+const FALLBACK_CATEGORY = 'Other'
+
 function GroceryTab() {
    const data = useLocation()
    const [currentEntry, setCurrentEntry] = useState<GroceryEntries | undefined>(
@@ -31,7 +43,9 @@ function GroceryTab() {
    const [categories, setCategories] = useState<Category[]>(() => loadCategories())
    const [showItemForm, setShowItemForm] = useState(false)
    const [showCategoryForm, setShowCategoryForm] = useState(false)
+   const [showEntryEditForm, setShowEntryEditForm] = useState(false)
    const [categoryError, setCategoryError] = useState<string | null>(null)
+   const [categoryPendingDelete, setCategoryPendingDelete] = useState<Category | null>(null)
 
    // Whenever this entry's items/expenses change, sync it back into the full
    // persisted entries list so App.tsx's list view and localStorage stay current.
@@ -51,11 +65,16 @@ function GroceryTab() {
       setShowItemForm(false)
    }
 
+   function handleEditEntry(updates: SaveDataInput) {
+      if (!currentEntry) return
+      setCurrentEntry(applyEntryEdits(currentEntry, updates))
+      setShowEntryEditForm(false)
+   }
+
    function handleAddCategory(newCategory: NewCategoryInput) {
       try {
          const updated = addCategory(categories, newCategory)
          setCategories(updated)
-         setShowCategoryForm(false)
          setCategoryError(null)
       } catch (error) {
          if (error instanceof DuplicateCategoryError) {
@@ -63,6 +82,46 @@ function GroceryTab() {
          }
       }
    }
+
+   function requestDeleteCategory(category: Category) {
+      setCategoryError(null)
+      setCategoryPendingDelete(category)
+   }
+
+   function confirmDeleteCategory() {
+      if (!categoryPendingDelete || !currentEntry) return
+      try {
+         const updatedCategories = deleteCategory(categories, categoryPendingDelete.id)
+         setCategories(updatedCategories)
+
+         const allEntries = loadSavedEntries()
+         const hasAffectedItems = allEntries.some(entry =>
+            entry.items.some(item => item.category === categoryPendingDelete.name),
+         )
+         if (hasAffectedItems) {
+            const reassigned = reassignItemsCategory(
+               allEntries,
+               categoryPendingDelete.name,
+               FALLBACK_CATEGORY,
+            )
+            const refreshedCurrent = reassigned.find(entry => entry.id === currentEntry.id)
+            if (refreshedCurrent) setCurrentEntry(refreshedCurrent)
+         }
+      } catch (error) {
+         if (error instanceof ProtectedCategoryError) {
+            setCategoryError(error.message)
+         }
+      }
+      setCategoryPendingDelete(null)
+   }
+
+   const affectedItemCount = categoryPendingDelete
+      ? loadSavedEntries().reduce(
+           (count, entry) =>
+              count + entry.items.filter(item => item.category === categoryPendingDelete.name).length,
+           0,
+        )
+      : 0
 
    const isOverBudget = currentEntry.expenses > currentEntry.budget
 
@@ -74,6 +133,7 @@ function GroceryTab() {
                date: currentEntry.date,
                items: currentEntry.items,
             }}
+            onEdit={() => setShowEntryEditForm(true)}
          />
 
          <Outlet context={{ currentEntry, setCurrentEntry, categories } satisfies GroceryContext} />
@@ -93,7 +153,7 @@ function GroceryTab() {
                   <button
                      type="button"
                      onClick={() => setShowCategoryForm(true)}
-                     aria-label="Add new category"
+                     aria-label="Manage categories"
                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-green-700 text-white hover:bg-green-800"
                   >
                      <FolderPlus size={20} />
@@ -133,6 +193,18 @@ function GroceryTab() {
             <FormItem categories={categories} onAdd={handleAddItem} />
          </AnimatedModal>
 
+         <AnimatedModal isOpen={showEntryEditForm} onClose={() => setShowEntryEditForm(false)}>
+            <FormGrocery
+               onAdd={handleEditEntry}
+               initialValues={{
+                  label: currentEntry.label,
+                  budget: currentEntry.budget,
+                  date: currentEntry.date,
+               }}
+               submitLabel="Save Changes"
+            />
+         </AnimatedModal>
+
          <AnimatedModal
             isOpen={showCategoryForm}
             onClose={() => {
@@ -143,6 +215,7 @@ function GroceryTab() {
             <FormCategory
                existingCategories={categories}
                onAdd={handleAddCategory}
+               onDeleteCategory={requestDeleteCategory}
                onCancel={() => {
                   setShowCategoryForm(false)
                   setCategoryError(null)
@@ -154,6 +227,20 @@ function GroceryTab() {
                </p>
             )}
          </AnimatedModal>
+
+         {categoryPendingDelete && (
+            <Modal
+               title={`Delete "${categoryPendingDelete.name}"?`}
+               message={
+                  affectedItemCount > 0
+                     ? `${affectedItemCount} item${affectedItemCount === 1 ? '' : 's'} using this category will move to "Other".`
+                     : 'No items are currently using this category.'
+               }
+               confirmLabel="Delete"
+               onConfirm={confirmDeleteCategory}
+               onCancel={() => setCategoryPendingDelete(null)}
+            />
+         )}
       </div>
    )
 }

@@ -1,11 +1,13 @@
 import { type GroceryEntries } from '../../types'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, ShoppingBasket } from 'lucide-react'
+import { ArrowLeft, ShoppingBasket, Pencil } from 'lucide-react'
 
 function GroceryNav({
    entryPartial,
+   onEdit,
 }: {
    entryPartial: Partial<GroceryEntries>
+   onEdit: () => void
 }) {
    const navigate = useNavigate()
 
@@ -22,9 +24,19 @@ function GroceryNav({
                </button>
 
                <div className="flex flex-col">
-                  <h3 className="text-lg font-semibold leading-tight text-neutral-900">
-                     {entryPartial.label}
-                  </h3>
+                  <div className="flex items-center gap-1.5">
+                     <h3 className="text-lg font-semibold leading-tight text-neutral-900">
+                        {entryPartial.label}
+                     </h3>
+                     <button
+                        type="button"
+                        onClick={onEdit}
+                        aria-label="Edit entry"
+                        className="rounded-md p-1 text-neutral-300 hover:bg-green-50 hover:text-green-700"
+                     >
+                        <Pencil size={13} />
+                     </button>
+                  </div>
                   <span className="text-xs text-neutral-400">{entryPartial.date}</span>
                </div>
             </div>
