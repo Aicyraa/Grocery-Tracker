@@ -1,75 +1,130 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# **_G r o c e r y  T r a c k e r 🛒_**
 
-Currently, two official plugins are available:
+![Static Badge](https://img.shields.io/badge/React-blue?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/TypeScript-blue?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/Gemini_API-8E75B2?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+</div>
 
-## React Compiler
+A personal grocery budget tracker built as an installable PWA — log what you buy, see where your money's going, and ask an AI assistant about your spending.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨Features
 
-## Expanding the ESLint configuration
+- Categorized grocery item tracking (add, edit, delete entries by category)
+- Expense visualization with interactive charts (Recharts)
+- Gemini API-powered chatbot to ask questions about your spending
+- Installable as a Progressive Web App — works like a native app on desktop and mobile
+- Local-storage persistence, so your data stays on your device
+- Responsive forms for adding groceries, categories, and individual items
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📲Install as an App (PWA)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Grocery Tracker is a Progressive Web App, so you can install it straight from the browser:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. Open the [live demo](https://groceryio.netlify.app/) on desktop or mobile
+2. Click the **Install** icon in the address bar (desktop) or **Add to Home Screen** (mobile)
+3. Launch it like any other app — it works offline once installed
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🛠️Tech Stack
 
-```
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4
+- **Charts:** Recharts
+- **Forms:** React Hook Form
+- **Routing:** React Router
+- **AI:** Gemini API
+- **PWA:** vite-plugin-pwa
+- **Testing:** Vitest, @vitest/ui
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🌲Tree Structure
 
 ```
+Grocery-Tracker/
+├── public/
+│   ├── Grocery-Entries.json
+│   ├── icon-192.png
+│   └── icon-512.png
+├── src/
+│   ├── components/
+│   │   ├── chart/
+│   │   │   └── ExpensesChart.tsx
+│   │   ├── chat/
+│   │   │   └── ChatBot.tsx
+│   │   ├── forms/
+│   │   │   ├── FormCategory.tsx
+│   │   │   ├── FormGrocery.tsx
+│   │   │   └── FormItem.tsx
+│   │   ├── groceries/
+│   │   │   ├── GroceryItems.tsx
+│   │   │   ├── GroceryNav.tsx
+│   │   │   ├── GroceryTab.tsx
+│   │   │   └── GroceryView.tsx
+│   │   └── ui/
+│   │       ├── AnimatedModal.tsx
+│   │       ├── Modal.tsx
+│   │       └── TopNav.tsx
+│   ├── css/
+│   │   ├── App.css
+│   │   ├── Grocery.css
+│   │   └── index.css
+│   ├── utils/
+│   │   ├── analytics.util.ts
+│   │   ├── calculate.util.ts
+│   │   ├── categories.util.ts
+│   │   ├── chatStorage.ts
+│   │   ├── data.util.ts
+│   │   ├── gemini.util.ts
+│   │   ├── geminiKey.ts
+│   │   ├── query.util.ts
+│   │   └── storage.ts
+│   ├── App.tsx
+│   ├── iconMap.tsx
+│   ├── main.tsx
+│   ├── routes.tsx
+│   └── types.ts
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+## ⚙️Installation
+
+```bash
+# clone the repo
+git clone https://github.com/Aicyraa/Grocery-Tracker.git
+cd Grocery-Tracker
+
+# install dependencies
+npm install
+
+# set up your Gemini API key
+# add your key wherever geminiKey.ts expects it (check that file for the exact variable)
+
+# run the dev server
+npm run dev
+```
+
+## 🧪Testing
+
+```bash
+npx vitest
+```
+
+Or open the Vitest UI:
+
+```bash
+npx vitest --ui
+```
+
+## 🔗Live Demo
+
+[View it live](https://groceryio.netlify.app/)
+
+## 📄License
+
+This project is licensed under the MIT License — see the LICENSE file for details.
